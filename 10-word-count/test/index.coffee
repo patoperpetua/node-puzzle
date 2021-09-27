@@ -1,6 +1,6 @@
 assert = require 'assert'
 WordCount = require '../lib'
-
+fs = require 'fs'
 
 helper = (input, expected, done) ->
   pass = false
@@ -37,6 +37,11 @@ describe '10-word-count', ->
     expected = words: 1, lines: 1
     helper input, expected, done
 
-  # !!!!!
-  # Make the above tests pass and add more tests!
-  # !!!!!
+  it 'test files provided', (done) ->
+    fs.readdir "#{__dirname}/fixtures",  (err, files) -> 
+      totalTests = files.length
+      files.forEach (file) -> 
+        fs.readFile "#{__dirname}/fixtures/"+file, 'utf8', (err, data) ->
+          params = file.split(',')
+          helper data, { words: params[1], lines: params[0] }, () -> {}
+    return done()
